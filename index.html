@@ -306,4 +306,148 @@
         loadToolInterface(id);
     }
 </script>
+            // --- 3. DYNAMIC TOOL INTERFACE LOADER ---
+    function loadToolInterface(id) {
+        const title = document.getElementById('active-tool-title');
+        const ui = document.getElementById('tool-ui-anchor');
+        const status = document.getElementById('status-bar');
+        
+        ui.innerHTML = ""; // Clearing previous tool data
+        status.innerText = "INITIALIZING SYSTEM...";
+
+        if(id === 'img2pdf') {
+            title.innerText = "BULK IMAGES TO PDF";
+            ui.innerHTML = `
+                <div class="input-group">
+                    <label>Select up to 1000+ Images:</label>
+                    <input type="file" id="targetFiles" multiple accept="image/*" class="input-supreme">
+                </div>
+                <button class="btn-supreme" onclick="processImages()">CONSTRUCT PDF</button>
+            `;
+        } else if(id === 'ocr') {
+            title.innerText = "AI OCR (IMAGE TO TEXT)";
+            ui.innerHTML = `
+                <div class="input-group">
+                    <label>Upload Document Image:</label>
+                    <input type="file" id="ocrFile" accept="image/*" class="input-supreme">
+                </div>
+                <button class="btn-supreme" onclick="processOCR()">EXTRACT & SAVE</button>
+            `;
+        } else if(id === 'split') {
+            title.innerText = "VISUAL SPLITTER (INVERTED)";
+            ui.innerHTML = `
+                <div class="input-group">
+                    <label>Upload PDF to Analyze:</label>
+                    <input type="file" id="splitFile" accept=".pdf" class="input-supreme" onchange="renderSplitPreview(this)">
+                </div>
+                <div id="split-grid" class="preview-grid"></div>
+                <button class="btn-supreme" onclick="processSplit()">EXTRACT REMAINING</button>
+            `;
+        } else if(id === 'sign') {
+            title.innerText = "LEGAL SIGNATURE PAD";
+            ui.innerHTML = `
+                <div class="input-group">
+                    <label>Draw Your Signature:</label>
+                    <div style="background:#fff; border-radius:20px; overflow:hidden; border:4px solid var(--gold);">
+                        <canvas id="signature-pad" style="width:100%; height:300px; cursor:crosshair;"></canvas>
+                    </div>
+                    <button class="btn-supreme" onclick="clearPad()" style="background:#333; color:#fff; font-size:1rem; margin-top:10px;">CLEAR SIGN</button>
+                </div>
+                <div class="input-group" style="margin-top:20px;">
+                    <label>Attach to PDF File:</label>
+                    <input type="file" id="signFile" accept=".pdf" class="input-supreme">
+                </div>
+                <button class="btn-supreme" onclick="processSignature()">STAMP & EXPORT</button>
+            `;
+            initSignaturePad();
+        } else if(id === 'lock') {
+            title.innerText = "PDF PASSWORD LOCK";
+            ui.innerHTML = `
+                <div class="input-group">
+                    <label>Select PDF to Secure:</label>
+                    <input type="file" id="lockFile" accept=".pdf" class="input-supreme">
+                    <label style="margin-top:15px;">Set Master Password:</label>
+                    <input type="text" id="pdfPass" class="input-supreme" placeholder="Enter Secret Code">
+                </div>
+                <button class="btn-supreme" onclick="processLock()">ENCRYPT FILE</button>
+            `;
+        } else if(id === 'merge') {
+            title.innerText = "PRO PDF MERGER";
+            ui.innerHTML = `
+                <div class="input-group">
+                    <label>Select Multiple PDFs (In Sequence):</label>
+                    <input type="file" id="mergeFiles" multiple accept=".pdf" class="input-supreme">
+                </div>
+                <button class="btn-supreme" onclick="processMerge()">MERGE INTO ONE</button>
+            `;
+        }
+    }
+
+    // --- 4. VISUAL SPLITTER LOGIC (THE HEART OF SWARG) ---
+    let selectedIndices = new Set();
+
+    async function renderSplitPreview(input) {
+        const grid = document.getElementById('split-grid');
+        const status = document.getElementById('status-bar');
+        const file = input.files[0];
+        
+        if(!file) return;
+        status.innerText = "DECRYPTING PDF PAGES...";
+        grid.innerHTML = "";
+        selectedIndices.clear();
+
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+        
+        for(let i=1; i<=pdf.numPages; i++) {
+            selectedIndices.add(i-1); // ALL SELECTED BY DEFAULT
+            const page = await pdf.getPage(i);
+            const viewport = page.getViewport({scale: 0.4});
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            await page.render({canvasContext: context, viewport: viewport}).promise;
+
+            const div = document.createElement('div');
+            div.className = "p-item"; // Visual state: Active (Blue Border)
+            div.innerHTML = `<span style="position:absolute; top:5px; left:5px; background:var(--neon); color:#000; font-weight:bold; padding:2px 8px; border-radius:5px; font-size:12px;">${i}</span>`;
+            div.appendChild(canvas);
+            
+            div.onclick = () => {
+                div.classList.toggle('disabled');
+                if(selectedIndices.has(i-1)) {
+                    selectedIndices.delete(i-1);
+                } else {
+                    selectedIndices.add(i-1);
+                }
+                status.innerText = `${selectedIndices.size} PAGES SELECTED FOR EXTRACTION`;
+            };
+            grid.appendChild(div);
+        }
+        status.innerText = `TOTAL ${pdf.numPages} PAGES LOADED. TAP TO UNSELECT.`;
+    }
+
+    // --- 5. SIGNATURE PAD INITIALIZER ---
+    function initSignaturePad() {
+        const canvas = document.getElementById('signature-pad');
+        signaturePad = new SignaturePad(canvas, {
+            backgroundColor: 'rgb(255, 255, 255)',
+            penColor: 'rgb(0, 0, 0)'
+        });
+        
+        // Auto-resize for Android Orientation
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+        canvas.width = canvas.offsetWidth * ratio;
+        canvas.height = canvas.offsetHeight * ratio;
+        canvas.getContext("2d").scale(ratio, ratio);
+        signaturePad.clear();
+    }
+
+    function clearPad() {
+        if(signaturePad) signaturePad.clear();
+    }
+        </script>
+            
         
