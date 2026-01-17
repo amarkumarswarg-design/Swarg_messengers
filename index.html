@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMAR-PDF ULTIMATE | Developed by Amar Kumar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <style>
+        :root { --neon: #00f3ff; --gold: #ffcc00; --bg: #050508; --card: #12121a; --blue-tick: #1da1f2; }
+        body { background: var(--bg); color: #fff; font-family: 'Rajdhani', sans-serif; margin: 0; padding: 0; }
+        
+        header { 
+            padding: 15px; background: #000; border-bottom: 2px solid var(--neon); 
+            display: flex; justify-content: center; align-items: center; position: sticky; top: 0; z-index: 100;
+        }
+        .dev-brand { font-family: 'Orbitron', sans-serif; color: var(--gold); display: flex; align-items: center; font-size: 1rem; }
+        .tick { margin-left: 8px; width: 18px; height: 18px; background: var(--blue-tick); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { box-shadow: 0 0 5px var(--blue-tick); } 50% { box-shadow: 0 0 15px var(--blue-tick); } }
+
+        .container { padding: 20px; max-width: 900px; margin: 0 auto; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; }
+        .card { background: var(--card); padding: 20px; border-radius: 15px; text-align: center; border: 1px solid #222; cursor: pointer; transition: 0.3s; }
+        .card:hover { border-color: var(--neon); transform: translateY(-5px); }
+        .card i { font-size: 2rem; display: block; margin-bottom: 10px; }
+
+        .work-area { display: none; background: var(--card); padding: 25px; border-radius: 20px; margin-top: 20px; border: 1px solid var(--neon); }
+        .btn { background: var(--neon); color: #000; padding: 12px 25px; border: none; border-radius: 25px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer; width: 100%; margin-top: 15px; }
+        textarea, input[type="file"] { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 8px; margin-top: 10px; }
+        #status { margin-top: 15px; color: var(--gold); text-align: center; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="dev-brand">DEVELOPED BY AMAR KUMAR <div class="tick">✔</div></div>
+</header>
+
+<div class="container">
+    <h1 style="text-align: center; color: var(--neon);">AMAR-PDF ULTIMATE</h1>
+    <p style="text-align: center; color: #888;">Faster than iLovePDF | 100% Local & Secure</p>
+
+    <div class="grid" id="menu">
+        <div class="card" onclick="showTool('img2pdf')"><i>📸</i> Images to PDF</div>
+        <div class="card" onclick="showTool('text2pdf')"><i>✍️</i> Text to PDF</div>
+        <div class="card" onclick="showTool('merge')"><i>🔗</i> Merge PDF</div>
+        <div class="card" onclick="showTool('split')"><i>✂️</i> Split PDF</div>
+    </div>
+
+    <div id="tool-box" class="work-area">
+        <button onclick="location.reload()" style="background:none; color:var(--neon); border:none; cursor:pointer;">← HOME</button>
+        <div id="content"></div>
+        <div id="status"></div>
+    </div>
+</div>
+
+<script>
+    const { jsPDF } = window.jspdf;
+    const { PDFDocument } = PDFLib;
+
+    function showTool(type) {
+        document.getElementById('menu').style.display = 'none';
+        const box = document.getElementById('tool-box');
+        const content = document.getElementById('content');
+        box.style.display = 'block';
+
+        if(type === 'img2pdf') {
+            content.innerHTML = `<h3>Bulk Images to PDF (1000+)</h3><input type="file" id="files" multiple accept="image/*"><button class="btn" onclick="doImg2Pdf()">GENERATE PDF</button>`;
+        } else if(type === 'text2pdf') {
+            content.innerHTML = `<h3>Text to PDF</h3><textarea id="txt" rows="10" placeholder="Paste text here..."></textarea><button class="btn" onclick="doText2Pdf()">DOWNLOAD PDF</button>`;
+        } else if(type === 'merge') {
+            content.innerHTML = `<h3>Merge Multiple PDFs</h3><input type="file" id="files" multiple accept=".pdf"><button class="btn" onclick="doMerge()">MERGE & DOWNLOAD</button>`;
+        } else if(type === 'split') {
+            content.innerHTML = `<h3>Split PDF (Page 1)</h3><input type="file" id="files" accept=".pdf"><button class="btn" onclick="doSplit()">EXTRACT PAGE 1</button>`;
+        }
+    }
+
+    async function doImg2Pdf() {
+        const files = document.getElementById('files').files;
+        if(!files.length) return alert("Files chunein!");
+        document.getElementById('status').innerText = "Processing 1000+ images...";
+        const doc = new jsPDF();
+        for(let i=0; i<files.length; i++) {
+            const data = await fileToData(files[i]);
+            if(i > 0) doc.addPage();
+            doc.addImage(data, 'JPEG', 0, 0, 210, 297);
+        }
+        doc.save("Amar-Images.pdf");
+        document.getElementById('status').innerText = "Download Complete!";
+    }
+
+    function doText2Pdf() {
+        const doc = new jsPDF();
+        const txt = document.getElementById('txt').value;
+        const lines = doc.splitTextToSize(txt, 180);
+        doc.text(lines, 15, 20);
+        doc.save("Amar-Text.pdf");
+    }
+
+    async function doMerge() {
+        const files = document.getElementById('files').files;
+        const mergedPdf = await PDFDocument.create();
+        for (let f of files) {
+            const pdf = await PDFDocument.load(await f.arrayBuffer());
+            const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+            pages.forEach(p => mergedPdf.addPage(p));
+        }
+        const bytes = await mergedPdf.save();
+        download(bytes, "Amar-Merged.pdf", "application/pdf");
+    }
+
+    async function doSplit() {
+        const file = document.getElementById('files').files[0];
+        const pdf = await PDFDocument.load(await file.arrayBuffer());
+        const newPdf = await PDFDocument.create();
+        const [page] = await newPdf.copyPages(pdf, [0]);
+        newPdf.addPage(page);
+        const bytes = await newPdf.save();
+        download(bytes, "Amar-Split-Page1.pdf", "application/pdf");
+    }
+
+    function fileToData(file) {
+        return new Promise(r => { const rd = new FileReader(); rd.onload = e => r(e.target.result); rd.readAsDataURL(file); });
+    }
+
+    function download(bytes, name, type) {
+        const blob = new Blob([bytes], {type});
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = name;
+        link.click();
+    }
+</script>
+</body>
+  </html>
+  
