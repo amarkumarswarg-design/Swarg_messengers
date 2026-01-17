@@ -175,3 +175,135 @@
         @keyframes breathe { from { opacity: 0.8; } to { opacity: 1; } }
     </style>
 </head>
+    <body>
+
+<canvas id="neural-canvas"></canvas>
+
+<header>
+    <div class="swarg-logo">SWARG</div>
+    <div class="identity-row">
+        <span class="amar-name">Amar Kumar</span>
+        <div class="blue-tick">✔</div>
+    </div>
+</header>
+
+<div class="container">
+    <div id="dashboard-view">
+        <p style="text-align:center; color:#666; font-size:1.1rem; letter-spacing:3px; margin-bottom:40px; font-weight:600;">
+            PREMIUM PDF ARCHITECTURE V15.0 | 2026 EDITION
+        </p>
+        
+        <div class="grid">
+            <div class="card" onclick="initiateTool('img2pdf')">
+                <i>🌌</i>
+                <h3>BULK IMG TO PDF</h3>
+            </div>
+            
+            <div class="card" onclick="initiateTool('ocr')">
+                <i>🤖</i>
+                <h3>AI OCR (IMAGE TO TEXT)</h3>
+            </div>
+            
+            <div class="card" onclick="initiateTool('split')">
+                <i>✂️</i>
+                <h3>VISUAL SPLIT (UNSELECT)</h3>
+            </div>
+            
+            <div class="card" onclick="initiateTool('sign')">
+                <i>✍️</i>
+                <h3>LEGAL SIGNATURE PAD</h3>
+            </div>
+            
+            <div class="card" onclick="initiateTool('lock')">
+                <i>🔒</i>
+                <h3>SECURE PDF LOCK</h3>
+            </div>
+            
+            <div class="card" onclick="initiateTool('merge')">
+                <i>🔗</i>
+                <h3>PRO PDF MERGER</h3>
+            </div>
+        </div>
+    </div>
+
+    <div id="workspace">
+        <span class="back-nav" onclick="location.reload()">← TERMINATE TASK</span>
+        <div class="panel">
+            <h2 id="active-tool-title" style="font-family:'Orbitron'; color:var(--neon); margin-bottom:30px; text-align:center; font-size:1.8rem;">TOOL NAME</h2>
+            <div id="tool-ui-anchor"></div>
+            <div id="status-bar">SYSTEM READY...</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- 1. NEURAL PARTICLE ENGINE (THE FLOATING DOTS) ---
+    const canvas = document.getElementById('neural-canvas');
+    const ctx = canvas.getContext('2d');
+    let points = [];
+
+    function setupNeuralNetwork() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        points = [];
+        // Creating 120 dynamic nodes
+        for(let i=0; i<120; i++) {
+            points.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 0.8,
+                vy: (Math.random() - 0.5) * 0.8,
+                r: Math.random() * 2.5
+            });
+        }
+    }
+
+    function renderNeuralGrid() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "rgba(0, 243, 255, 0.4)";
+        
+        points.forEach((p, i) => {
+            p.x += p.vx;
+            p.y += p.vy;
+
+            // Boundary checks for Android screens
+            if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
+            if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Connecting lines (Neural Constellations)
+            for(let j=i+1; j < points.length; j++) {
+                let distance = Math.hypot(p.x - points[j].x, p.y - points[j].y);
+                if(distance < 110) {
+                    ctx.strokeStyle = `rgba(0, 243, 255, ${1 - distance/110})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.beginPath();
+                    ctx.moveTo(p.x, p.y);
+                    ctx.lineTo(points[j].x, points[j].y);
+                    ctx.stroke();
+                }
+            }
+        });
+        requestAnimationFrame(renderNeuralGrid);
+    }
+
+    // Initialize Engine
+    window.addEventListener('resize', setupNeuralNetwork);
+    setupNeuralNetwork();
+    renderNeuralGrid();
+
+    // --- 2. GLOBAL NAVIGATION CONTROLLER ---
+    function initiateTool(id) {
+        document.getElementById('dashboard-view').style.display = 'none';
+        const ws = document.getElementById('workspace');
+        ws.style.display = 'block';
+        window.scrollTo(0, 0);
+        
+        // Tool specific loaders will be in Part 3
+        loadToolInterface(id);
+    }
+</script>
+        
