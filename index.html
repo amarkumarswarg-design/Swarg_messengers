@@ -343,4 +343,36 @@
         const kb = document.getElementById('targetKB').value;
         updateStatus("RUNNING QUALITY ITERATION...");
         const options = { maxSizeMB: kb/1024, maxWidthOrHeight: 1920, useWebWorker: true };
-        const compressed = await imageCompression(file, opti
+        const compressed = await imageCompression(file, options);
+        triggerDownload(compressed, "Swarg_Optimized.jpg");
+        updateStatus(`SHRUNK TO ${(compressed.size/1024).toFixed(1)} KB`);
+    }
+
+    async function execMerge() {
+        const files = document.getElementById('fIn').files;
+        if(files.length < 2) return;
+        const name = await promptName("Swarg_Final_Merge");
+        updateStatus("BUFFERING PDF STREAMS...");
+        const merged = await PDFDocument.create();
+        for(let f of files) {
+            const pdf = await PDFDocument.load(await f.arrayBuffer(), {ignoreEncryption: true});
+            const pages = await merged.copyPages(pdf, pdf.getPageIndices());
+            pages.forEach(p => merged.addPage(p));
+        }
+        triggerDownload(await merged.save(), name + ".pdf");
+        updateStatus("MERGE SUCCESSFUL.");
+    }
+
+    function updateStatus(msg) { document.getElementById('status-bar').innerText = msg; }
+
+    function logFiles(input) {
+        document.getElementById('file-log').innerHTML = Array.from(input.files).map(f => `• ${f.name}`).join('<br>');
+    }
+
+    function triggerDownload(data, name) {
+        const blob = data instanceof Blob ? data : new Blob([data], {type: "application/pdf"});
+        const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = name; link.click();
+    }
+</script>
+</body>
+</html>
