@@ -1,137 +1,404 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMAR-PDF ULTIMATE | Developed by Amar Kumar</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SWARG | Premium PDF Tools by Amar Kumar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
-        :root { --neon: #00f3ff; --gold: #ffcc00; --bg: #050508; --card: #12121a; --blue-tick: #1da1f2; }
-        body { background: var(--bg); color: #fff; font-family: 'Rajdhani', sans-serif; margin: 0; padding: 0; }
-        
-        header { 
-            padding: 15px; background: #000; border-bottom: 2px solid var(--neon); 
-            display: flex; justify-content: center; align-items: center; position: sticky; top: 0; z-index: 100;
+        /* --- CSS VARIABLES & RESET --- */
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-gold: #ffd700;
+            --bg-dark: #050508;
+            --card-bg: rgba(20, 20, 30, 0.7);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+            --blue-tick-color: #1da1f2;
         }
-        .dev-brand { font-family: 'Orbitron', sans-serif; color: var(--gold); display: flex; align-items: center; font-size: 1rem; }
-        .tick { margin-left: 8px; width: 18px; height: 18px; background: var(--blue-tick); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { box-shadow: 0 0 5px var(--blue-tick); } 50% { box-shadow: 0 0 15px var(--blue-tick); } }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            background: radial-gradient(circle at center top, #1a1a2e, var(--bg-dark));
+            color: #fff; font-family: 'Rajdhani', sans-serif; min-height: 100vh; overflow-x: hidden;
+        }
 
-        .container { padding: 20px; max-width: 900px; margin: 0 auto; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; }
-        .card { background: var(--card); padding: 20px; border-radius: 15px; text-align: center; border: 1px solid #222; cursor: pointer; transition: 0.3s; }
-        .card:hover { border-color: var(--neon); transform: translateY(-5px); }
-        .card i { font-size: 2rem; display: block; margin-bottom: 10px; }
+        /* --- HEADER BRANDING (The Swarg Effect) --- */
+        header {
+            padding: 25px 15px; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--neon-blue); display: flex; flex-direction: column;
+            align-items: center; justify-content: center; position: sticky; top: 0; z-index: 100;
+            box-shadow: 0 5px 30px rgba(0, 243, 255, 0.2);
+        }
+        .main-title {
+            font-family: 'Orbitron', sans-serif; font-size: 2.5rem; font-weight: 900;
+            color: var(--neon-blue); letter-spacing: 4px; text-transform: uppercase;
+            text-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue), 0 0 40px var(--neon-blue);
+            animation: titleShine 3s infinite alternate;
+        }
+        .sub-branding {
+            display: flex; align-items: center; margin-top: 8px; font-family: 'Orbitron', sans-serif;
+        }
+        .creator-name {
+            color: var(--neon-gold); font-size: 1.2rem; letter-spacing: 1px;
+            text-shadow: 0 0 5px var(--neon-gold); animation: goldPulse 2s infinite alternate;
+        }
+        .blue-tick {
+            margin-left: 10px; width: 24px; height: 24px; background: var(--blue-tick-color);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 12px; color: white; box-shadow: 0 0 15px var(--blue-tick-color);
+            animation: tickPulse 1.5s infinite;
+        }
 
-        .work-area { display: none; background: var(--card); padding: 25px; border-radius: 20px; margin-top: 20px; border: 1px solid var(--neon); }
-        .btn { background: var(--neon); color: #000; padding: 12px 25px; border: none; border-radius: 25px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer; width: 100%; margin-top: 15px; }
-        textarea, input[type="file"] { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 8px; margin-top: 10px; }
-        #status { margin-top: 15px; color: var(--gold); text-align: center; font-weight: bold; }
+        /* --- ANIMATIONS --- */
+        @keyframes titleShine { 0% { opacity: 0.8; text-shadow: 0 0 10px var(--neon-blue); } 100% { opacity: 1; text-shadow: 0 0 30px var(--neon-blue), 0 0 60px var(--neon-blue); } }
+        @keyframes goldPulse { 0% { opacity: 0.8; } 100% { opacity: 1; text-shadow: 0 0 15px var(--neon-gold); } }
+        @keyframes tickPulse { 0% { transform: scale(1); box-shadow: 0 0 10px var(--blue-tick-color); } 50% { transform: scale(1.15); box-shadow: 0 0 25px var(--blue-tick-color); } 100% { transform: scale(1); box-shadow: 0 0 10px var(--blue-tick-color); } }
+
+        /* --- CONTAINER & GRID --- */
+        .container { padding: 30px 20px; max-width: 1000px; margin: 0 auto; }
+        .hero-text { text-align: center; margin-bottom: 40px;color: #aaa; font-size: 1.1rem; }
+        .grid-menu {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 25px;
+        }
+        .tool-card {
+            background: var(--card-bg); padding: 30px 20px; border-radius: 20px;
+            text-align: center; border: var(--glass-border); cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); backdrop-filter: blur(10px);
+        }
+        .tool-card:hover {
+            border-color: var(--neon-blue); transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0, 243, 255, 0.15); background: rgba(0, 243, 255, 0.05);
+        }
+        .card-icon { font-size: 3rem; display: block; margin-bottom: 15px; filter: drop-shadow(0 0 5px var(--neon-blue)); }
+        .card-title { font-weight: 700; font-size: 1.2rem; color: #fff; font-family: 'Orbitron'; }
+
+        /* --- WORKSPACE AREA --- */
+        #workspace { display: none; animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .tool-container {
+            background: var(--card-bg); padding: 30px; border-radius: 25px;
+            border: 1px solid var(--neon-blue); backdrop-filter: blur(15px);
+        }
+        .back-btn {
+            background: none; border: none; color: var(--neon-blue); font-size: 1.1rem;
+            cursor: pointer; display: flex; align-items: center; margin-bottom: 20px;
+            font-family: 'Orbitron'; transition: 0.3s;
+        }
+        .back-btn:hover { transform: translateX(-5px); color: #fff; }
+        
+        /* --- FORM ELEMENTS --- */
+        h2 { color: var(--neon-gold); font-family: 'Orbitron'; margin-bottom: 25px; text-align: center; }
+        .input-group { margin-bottom: 25px; }
+        label { display: block; margin-bottom: 10px; font-weight: 600; color: var(--neon-blue); }
+        input[type="file"], textarea, input[type="text"] {
+            width: 100%; background: rgba(0,0,0,0.5); border: 1px solid #333;
+            color: #fff; padding: 15px; border-radius: 12px; outline: none;
+            font-family: 'Rajdhani'; font-size: 1rem; transition: 0.3s;
+        }
+        input[type="file"]::file-selector-button {
+            background: #333; color: var(--neon-blue); border: 1px solid var(--neon-blue);
+            padding: 8px 15px; border-radius: 8px; cursor: pointer; margin-right: 15px;
+        }
+        input:focus, textarea:focus { border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(0, 243, 255, 0.3); }
+        
+        .action-btn {
+            width: 100%; padding: 18px; border: none; border-radius: 30px;
+            background: linear-gradient(45deg, var(--neon-blue), #0066ff);
+            color: #000; font-family: 'Orbitron'; font-weight: 900; font-size: 1.2rem;
+            cursor: pointer; transition: 0.4s; box-shadow: 0 5px 20px rgba(0, 243, 255, 0.4);
+        }
+        .action-btn:hover { transform: scale(1.03); box-shadow: 0 10px 30px rgba(0, 243, 255, 0.6); }
+        .action-btn:disabled { background: #333; color: #666; cursor: not-allowed; box-shadow: none; }
+        #status-bar { margin-top: 20px; text-align: center; font-weight: 700; color: var(--neon-gold); min-height: 25px; }
+
+        /* SweetAlert Customization */
+        div:where(.swal2-container) div:where(.swal2-popup) {
+            background: #11111a !important; border: 1px solid var(--neon-blue);
+        }
+        div:where(.swal2-container) h2:where(.swal2-title), div:where(.swal2-container) div:where(.swal2-html-container) {
+            color: #fff !important; font-family: 'Rajdhani';
+        }
+        div:where(.swal2-container) input:where(.swal2-input) { color: #fff !important; border-color: var(--neon-blue) !important; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="dev-brand">DEVELOPED BY AMAR KUMAR <div class="tick">✔</div></div>
+    <div class="main-title">SWARG</div>
+    <div class="sub-branding">
+        <span class="creator-name">Amar Kumar</span>
+        <div class="blue-tick">✔</div>
+    </div>
 </header>
 
 <div class="container">
-    <h1 style="text-align: center; color: var(--neon);">AMAR-PDF ULTIMATE</h1>
-    <p style="text-align: center; color: #888;">Faster than iLovePDF | 100% Local & Secure</p>
-
-    <div class="grid" id="menu">
-        <div class="card" onclick="showTool('img2pdf')"><i>📸</i> Images to PDF</div>
-        <div class="card" onclick="showTool('text2pdf')"><i>✍️</i> Text to PDF</div>
-        <div class="card" onclick="showTool('merge')"><i>🔗</i> Merge PDF</div>
-        <div class="card" onclick="showTool('split')"><i>✂️</i> Split PDF</div>
+    <div id="menu-section">
+        <p class="hero-text">Professional Local PDF Tools. Zero Uploads. 100% Privacy.</p>
+        <div class="grid-menu">
+            <div class="tool-card" onclick="loadTool('img2pdf')">
+                <span class="card-icon">📸</span>
+                <span class="card-title">Images to PDF (Bulk)</span>
+            </div>
+            <div class="tool-card" onclick="loadTool('text2pdf')">
+                <span class="card-icon">📝</span>
+                <span class="card-title">Text to PDF</span>
+            </div>
+            <div class="tool-card" onclick="loadTool('merge')">
+                <span class="card-icon">🔗</span>
+                <span class="card-title">Merge PDFs</span>
+            </div>
+            <div class="tool-card" onclick="loadTool('split')">
+                <span class="card-icon">✂️</span>
+                <span class="card-title">Split PDF (Advanced)</span>
+            </div>
+        </div>
     </div>
 
-    <div id="tool-box" class="work-area">
-        <button onclick="location.reload()" style="background:none; color:var(--neon); border:none; cursor:pointer;">← HOME</button>
-        <div id="content"></div>
-        <div id="status"></div>
+    <div id="workspace">
+        <button class="back-btn" onclick="goHome()">← Back to Swarg Home</button>
+        <div id="tool-content" class="tool-container">
+            </div>
+        <div id="status-bar"></div>
     </div>
 </div>
 
 <script>
+    // Initialize libraries
     const { jsPDF } = window.jspdf;
     const { PDFDocument } = PDFLib;
 
-    function showTool(type) {
-        document.getElementById('menu').style.display = 'none';
-        const box = document.getElementById('tool-box');
-        const content = document.getElementById('content');
-        box.style.display = 'block';
+    // UI Navigation Functions
+    function loadTool(toolType) {
+        document.getElementById('menu-section').style.display = 'none';
+        const workspace = document.getElementById('workspace');
+        const content = document.getElementById('tool-content');
+        updateStatus('');
+        workspace.style.display = 'block';
 
-        if(type === 'img2pdf') {
-            content.innerHTML = `<h3>Bulk Images to PDF (1000+)</h3><input type="file" id="files" multiple accept="image/*"><button class="btn" onclick="doImg2Pdf()">GENERATE PDF</button>`;
-        } else if(type === 'text2pdf') {
-            content.innerHTML = `<h3>Text to PDF</h3><textarea id="txt" rows="10" placeholder="Paste text here..."></textarea><button class="btn" onclick="doText2Pdf()">DOWNLOAD PDF</button>`;
-        } else if(type === 'merge') {
-            content.innerHTML = `<h3>Merge Multiple PDFs</h3><input type="file" id="files" multiple accept=".pdf"><button class="btn" onclick="doMerge()">MERGE & DOWNLOAD</button>`;
-        } else if(type === 'split') {
-            content.innerHTML = `<h3>Split PDF (Page 1)</h3><input type="file" id="files" accept=".pdf"><button class="btn" onclick="doSplit()">EXTRACT PAGE 1</button>`;
+        // Render appropriate tool interface
+        switch(toolType) {
+            case 'img2pdf':
+                content.innerHTML = `
+                    <h2>Bulk Images to PDF</h2>
+                    <div class="input-group">
+                        <label>Select Images (Max 1000+):</label>
+                        <input type="file" id="imgFiles" multiple accept="image/jpeg, image/png" onchange="countFiles(this)">
+                    </div>
+                    <button id="actionBtn" class="action-btn" onclick="processImg2Pdf()">GENERATE PDF</button>
+                `;
+                break;
+            case 'text2pdf':
+                content.innerHTML = `
+                    <h2>Text Document to PDF</h2>
+                    <div class="input-group">
+                        <label>Paste Your Text Here:</label>
+                        <textarea id="pdf Text" rows="12" placeholder="Type or paste content here..."></textarea>
+                    </div>
+                    <button id="actionBtn" class="action-btn" onclick="processText2Pdf()">GENERATE PDF</button>
+                `;
+                break;
+            case 'merge':
+                content.innerHTML = `
+                    <h2>Merge Multiple PDFs</h2>
+                    <div class="input-group">
+                        <label>Select PDF Files (In Order):</label>
+                        <input type="file" id="mergeFiles" multiple accept=".pdf" onchange="countFiles(this)">
+                    </div>
+                    <button id="actionBtn" class="action-btn" onclick="processMerge()">MERGE FILES</button>
+                `;
+                break;
+            case 'split':
+                content.innerHTML = `
+                    <h2>Advanced PDF Splitter</h2>
+                    <div class="input-group">
+                        <label>1. Select Source PDF:</label>
+                        <input type="file" id="splitFile" accept=".pdf">
+                    </div>
+                    <div class="input-group">
+                        <label>2. Pages to Extract (e.g., 1, 3-5, 8):</label>
+                        <input type="text" id="pageRange" placeholder="Example: 1, 2, 5-10">
+                        <small style="color:#888; display:block; margin-top:5px;">Use commas for single pages and hyphens for ranges.</small>
+                    </div>
+                    <button id="actionBtn" class="action-btn" onclick="processSplit()">EXTRACT PAGES</button>
+                `;
+                break;
         }
     }
 
-    async function doImg2Pdf() {
-        const files = document.getElementById('files').files;
-        if(!files.length) return alert("Files chunein!");
-        document.getElementById('status').innerText = "Processing 1000+ images...";
+    function goHome() {
+        document.getElementById('workspace').style.display = 'none';
+        document.getElementById('menu-section').style.display = 'block';
+    }
+
+    function updateStatus(msg, isError = false) {
+        const status = document.getElementById('status-bar');
+        status.style.color = isError ? '#ff4757' : 'var(--neon-gold)';
+        status.innerText = msg;
+    }
+
+    function countFiles(input) {
+        updateStatus(`${input.files.length} file(s) selected.`);
+    }
+
+    // Helper: Professional Filename Prompt
+    async function askFileName(defaultName) {
+        const { value: fileName } = await Swal.fire({
+            title: 'Name Your PDF',
+            input: 'text',
+            inputValue: defaultName,
+            inputLabel: 'Enter a professional filename:',
+            inputPlaceholder: 'e.g., My-Important-Docs',
+            background: '#111',
+            color: '#fff',
+            confirmButtonColor: '#00f3ff',
+            confirmButtonText: 'SAVE PDF',
+            showCancelButton: true,
+            inputValidator: (value) => {
+                if (!value) return 'Filename cannot be empty!';
+            }
+        });
+        return fileName ? (fileName.endsWith('.pdf') ? fileName : `${fileName}.pdf`) : null;
+    }
+
+    // --- TOOL LOGIC: IMAGE TO PDF ---
+    async function processImg2Pdf() {
+        const files = document.getElementById('imgFiles').files;
+        if (files.length === 0) return updateStatus("Please select images first!", true);
+
+        const fileName = await askFileName('Swarg-Images.pdf');
+        if (!fileName) return;
+
+        const btn = document.getElementById('actionBtn'); btn.disabled = true; btn.innerText = "PROCESSING...";
+        updateStatus(`Processing ${files.length} images. This uses your device power...`);
+
+        try {
+            const doc = new jsPDF();
+            for (let i = 0; i < files.length; i++) {
+                const dataUrl = await readFileAsDataURL(files[i]);
+                const imgProps = doc.getImageProperties(dataUrl);
+                const pdfWidth = doc.internal.pageSize.getWidth();
+                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+                
+                if (i > 0) doc.addPage();
+                doc.addImage(dataUrl, imgProps.format, 0, 0, pdfWidth, pdfHeight);
+                updateStatus(`Processed image ${i + 1} of ${files.length}...`);
+            }
+            doc.save(fileName);
+            updateStatus("Success! PDF downloaded.");
+        } catch (e) { updateStatus("Error generating PDF: " + e.message, true); }
+        btn.disabled = false; btn.innerText = "GENERATE PDF";
+    }
+
+    // --- TOOL LOGIC: TEXT TO PDF ---
+    async function processText2Pdf() {
+        const text = document.getElementById('pdfText').value;
+        if (!text.trim()) return updateStatus("Text area is empty!", true);
+
+        const fileName = await askFileName('Swarg-Notes.pdf');
+        if (!fileName) return;
+
         const doc = new jsPDF();
-        for(let i=0; i<files.length; i++) {
-            const data = await fileToData(files[i]);
-            if(i > 0) doc.addPage();
-            doc.addImage(data, 'JPEG', 0, 0, 210, 297);
-        }
-        doc.save("Amar-Images.pdf");
-        document.getElementById('status').innerText = "Download Complete!";
+        const splitText = doc.splitTextToSize(text, 180); // Margin handling
+        doc.text(splitText, 15, 20);
+        doc.save(fileName);
+        updateStatus("Success! Text PDF created.");
     }
 
-    function doText2Pdf() {
-        const doc = new jsPDF();
-        const txt = document.getElementById('txt').value;
-        const lines = doc.splitTextToSize(txt, 180);
-        doc.text(lines, 15, 20);
-        doc.save("Amar-Text.pdf");
+    // --- TOOL LOGIC: MERGE PDFS ---
+    async function processMerge() {
+        const files = document.getElementById('mergeFiles').files;
+        if (files.length < 2) return updateStatus("Select at least 2 PDF files to merge.", true);
+
+        const fileName = await askFileName('Swarg-Merged.pdf');
+        if (!fileName) return;
+
+        updateStatus("Merging PDFs... Please wait.");
+        const btn = document.getElementById('actionBtn'); btn.disabled = true;
+        try {
+            const mergedPdf = await PDFDocument.create();
+            for (let file of files) {
+                const arrayBuffer = await file.arrayBuffer();
+                const pdf = await PDFDocument.load(arrayBuffer);
+                const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+                copiedPages.forEach((page) => mergedPdf.addPage(page));
+            }
+            const pdfBytes = await mergedPdf.save();
+            downloadBlob(pdfBytes, fileName, 'application/pdf');
+            updateStatus("Merged successfully!");
+        } catch (e) { updateStatus("Merge failed: File might be corrupted or encrypted.", true); }
+        btn.disabled = false;
     }
 
-    async function doMerge() {
-        const files = document.getElementById('files').files;
-        const mergedPdf = await PDFDocument.create();
-        for (let f of files) {
-            const pdf = await PDFDocument.load(await f.arrayBuffer());
-            const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
-            pages.forEach(p => mergedPdf.addPage(p));
-        }
-        const bytes = await mergedPdf.save();
-        download(bytes, "Amar-Merged.pdf", "application/pdf");
+    // --- TOOL LOGIC: ADVANCED SPLIT PDF ---
+    async function processSplit() {
+        const fileInput = document.getElementById('splitFile');
+        const rangeInput = document.getElementById('pageRange').value;
+
+        if (!fileInput.files.length) return updateStatus("Select a source PDF first.", true);
+        if (!rangeInput.match(/^[\d,\s\-]+$/)) return updateStatus("Invalid page format. Use numbers, commas, hyphens.", true);
+
+        const fileName = await askFileName('Swarg-Extracted.pdf');
+        if (!fileName) return;
+
+        updateStatus("Analyzing PDF structure...");
+        const btn = document.getElementById('actionBtn'); btn.disabled = true;
+
+        try {
+            const arrayBuffer = await fileInput.files[0].arrayBuffer();
+            const srcPdf = await PDFDocument.load(arrayBuffer);
+            const totalPages = srcPdf.getPageCount();
+            
+            // Advanced Range Parsing Logic
+            const pagesToKeep = new Set();
+            rangeInput.split(',').forEach(part => {
+                const range = part.trim().split('-').map(p => parseInt(p));
+                if (range.length === 1) {
+                    if(range[0] > 0 && range[0] <= totalPages) pagesToKeep.add(range[0] - 1); // 0-indexed
+                } else if (range.length === 2) {
+                    const start = Math.min(range[0], range[1]);
+                    const end = Math.max(range[0], range[1]);
+                    for(let i = start; i <= end; i++) {
+                        if(i > 0 && i <= totalPages) pagesToKeep.add(i - 1);
+                    }
+                }
+            });
+
+            if(pagesToKeep.size === 0) throw new Error("No valid pages selected based on input.");
+
+            const newPdf = await PDFDocument.create();
+            const copiedPages = await newPdf.copyPages(srcPdf, Array.from(pagesToKeep));
+            copiedPages.forEach(page => newPdf.addPage(page));
+            
+            const pdfBytes = await newPdf.save();
+            downloadBlob(pdfBytes, fileName, 'application/pdf');
+            updateStatus(`Success! Extracted ${pagesToKeep.size} pages.`);
+
+        } catch (e) { updateStatus("Split Error: " + e.message, true); }
+        btn.disabled = false;
     }
 
-    async function doSplit() {
-        const file = document.getElementById('files').files[0];
-        const pdf = await PDFDocument.load(await file.arrayBuffer());
-        const newPdf = await PDFDocument.create();
-        const [page] = await newPdf.copyPages(pdf, [0]);
-        newPdf.addPage(page);
-        const bytes = await newPdf.save();
-        download(bytes, "Amar-Split-Page1.pdf", "application/pdf");
+    // --- UTILITY FUNCTIONS ---
+    function readFileAsDataURL(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => resolve(e.target.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
     }
 
-    function fileToData(file) {
-        return new Promise(r => { const rd = new FileReader(); rd.onload = e => r(e.target.result); rd.readAsDataURL(file); });
-    }
-
-    function download(bytes, name, type) {
-        const blob = new Blob([bytes], {type});
+    function downloadBlob(bytes, name, type) {
+        const blob = new Blob([bytes], { type: type });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
         link.download = name;
+        document.body.appendChild(link);
         link.click();
+        document.body.removeChild(link);
     }
 </script>
 </body>
-  </html>
-  
+</html>
