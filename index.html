@@ -3,401 +3,516 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SWARG | Premium PDF Tools by Amar Kumar</title>
+    <title>SWARG GOD-MODE | Amar Kumar Premium</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/browser-image-compression/2.0.2/browser-image-compression.min.js"></script>
 
     <style>
-        /* --- CSS VARIABLES & RESET --- */
+        /* SWARG ULTIMATE STYLING 
+           DEVELOPED BY AMAR KUMAR 
+        */
         :root {
             --neon-blue: #00f3ff;
             --neon-gold: #ffd700;
-            --bg-dark: #050508;
-            --card-bg: rgba(20, 20, 30, 0.7);
-            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
-            --blue-tick-color: #1da1f2;
+            --bg-dark: #020205;
+            --glass: rgba(15, 15, 25, 0.85);
+            --border: 1px solid rgba(0, 243, 255, 0.2);
+            --blue-tick: #1da1f2;
         }
+
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
         body {
-            background: radial-gradient(circle at center top, #1a1a2e, var(--bg-dark));
-            color: #fff; font-family: 'Rajdhani', sans-serif; min-height: 100vh; overflow-x: hidden;
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(0, 243, 255, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(255, 215, 0, 0.05) 0%, transparent 40%);
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* --- HEADER BRANDING (The Swarg Effect) --- */
+        /* --- AMAR KUMAR SUPREME HEADER --- */
         header {
-            padding: 25px 15px; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
-            border-bottom: 2px solid var(--neon-blue); display: flex; flex-direction: column;
-            align-items: center; justify-content: center; position: sticky; top: 0; z-index: 100;
-            box-shadow: 0 5px 30px rgba(0, 243, 255, 0.2);
+            padding: 30px 10px;
+            background: rgba(0,0,0,0.9);
+            border-bottom: 3px solid var(--neon-blue);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 10px 40px rgba(0, 243, 255, 0.3);
         }
-        .main-title {
-            font-family: 'Orbitron', sans-serif; font-size: 2.5rem; font-weight: 900;
-            color: var(--neon-blue); letter-spacing: 4px; text-transform: uppercase;
-            text-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue), 0 0 40px var(--neon-blue);
-            animation: titleShine 3s infinite alternate;
+
+        .swarg-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            letter-spacing: 8px;
+            color: #fff;
+            text-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue);
+            margin-bottom: 5px;
         }
-        .sub-branding {
-            display: flex; align-items: center; margin-top: 8px; font-family: 'Orbitron', sans-serif;
+
+        .creator-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
-        .creator-name {
-            color: var(--neon-gold); font-size: 1.2rem; letter-spacing: 1px;
-            text-shadow: 0 0 5px var(--neon-gold); animation: goldPulse 2s infinite alternate;
+
+        .amar-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.4rem;
+            color: var(--neon-gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            /* CONTINUOUS SHINE EFFECT */
+            animation: amarShine 1.5s infinite alternate ease-in-out;
         }
+
+        @keyframes amarShine {
+            0% { text-shadow: 0 0 5px var(--neon-gold); opacity: 0.8; transform: scale(0.98); }
+            100% { text-shadow: 0 0 25px var(--neon-gold), 0 0 45px var(--neon-gold); opacity: 1; transform: scale(1.02); }
+        }
+
         .blue-tick {
-            margin-left: 10px; width: 24px; height: 24px; background: var(--blue-tick-color);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 12px; color: white; box-shadow: 0 0 15px var(--blue-tick-color);
-            animation: tickPulse 1.5s infinite;
+            width: 26px;
+            height: 26px;
+            background: var(--blue-tick-color);
+            background-color: #1da1f2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            color: white;
+            box-shadow: 0 0 15px #1da1f2;
+            animation: tickPulse 2s infinite;
         }
 
-        /* --- ANIMATIONS --- */
-        @keyframes titleShine { 0% { opacity: 0.8; text-shadow: 0 0 10px var(--neon-blue); } 100% { opacity: 1; text-shadow: 0 0 30px var(--neon-blue), 0 0 60px var(--neon-blue); } }
-        @keyframes goldPulse { 0% { opacity: 0.8; } 100% { opacity: 1; text-shadow: 0 0 15px var(--neon-gold); } }
-        @keyframes tickPulse { 0% { transform: scale(1); box-shadow: 0 0 10px var(--blue-tick-color); } 50% { transform: scale(1.15); box-shadow: 0 0 25px var(--blue-tick-color); } 100% { transform: scale(1); box-shadow: 0 0 10px var(--blue-tick-color); } }
+        @keyframes tickPulse {
+            0% { box-shadow: 0 0 5px #1da1f2; }
+            50% { box-shadow: 0 0 25px #1da1f2; }
+            100% { box-shadow: 0 0 5px #1da1f2; }
+        }
 
-        /* --- CONTAINER & GRID --- */
-        .container { padding: 30px 20px; max-width: 1000px; margin: 0 auto; }
-        .hero-text { text-align: center; margin-bottom: 40px;color: #aaa; font-size: 1.1rem; }
-        .grid-menu {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 25px;
+        /* --- MAIN UI COMPONENTS --- */
+        .container {
+            padding: 40px 20px;
+            max-width: 1100px;
+            margin: 0 auto;
         }
-        .tool-card {
-            background: var(--card-bg); padding: 30px 20px; border-radius: 20px;
-            text-align: center; border: var(--glass-border); cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); backdrop-filter: blur(10px);
-        }
-        .tool-card:hover {
-            border-color: var(--neon-blue); transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 15px 35px rgba(0, 243, 255, 0.15); background: rgba(0, 243, 255, 0.05);
-        }
-        .card-icon { font-size: 3rem; display: block; margin-bottom: 15px; filter: drop-shadow(0 0 5px var(--neon-blue)); }
-        .card-title { font-weight: 700; font-size: 1.2rem; color: #fff; font-family: 'Orbitron'; }
 
-        /* --- WORKSPACE AREA --- */
-        #workspace { display: none; animation: fadeIn 0.5s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .tool-container {
-            background: var(--card-bg); padding: 30px; border-radius: 25px;
-            border: 1px solid var(--neon-blue); backdrop-filter: blur(15px);
+        .hero-desc {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #888;
+            margin-bottom: 50px;
+            letter-spacing: 1px;
         }
-        .back-btn {
-            background: none; border: none; color: var(--neon-blue); font-size: 1.1rem;
-            cursor: pointer; display: flex; align-items: center; margin-bottom: 20px;
-            font-family: 'Orbitron'; transition: 0.3s;
+
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
         }
-        .back-btn:hover { transform: translateX(-5px); color: #fff; }
+
+        .card {
+            background: var(--glass);
+            border: var(--border);
+            padding: 40px 20px;
+            border-radius: 24px;
+            text-align: center;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0, 243, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: 0.6s;
+        }
+
+        .card:hover::before { left: 100%; }
+
+        .card:hover {
+            transform: translateY(-12px);
+            border-color: var(--neon-blue);
+            box-shadow: 0 20px 50px rgba(0, 243, 255, 0.2);
+            background: rgba(0, 243, 255, 0.05);
+        }
+
+        .card i { font-size: 3.5rem; display: block; margin-bottom: 20px; filter: drop-shadow(0 0 10px var(--neon-blue)); }
+        .card h3 { font-family: 'Orbitron'; font-size: 1.1rem; color: #fff; }
+
+        /* --- WORKSPACE STYLES --- */
+        #workspace { display: none; animation: slideUp 0.6s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-panel {
+            background: var(--glass);
+            border: 2px solid var(--neon-blue);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 0 40px rgba(0, 243, 255, 0.1);
+        }
+
+        .back-link {
+            color: var(--neon-blue);
+            text-decoration: none;
+            font-family: 'Orbitron';
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 30px;
+            cursor: pointer;
+        }
+
+        .input-group { margin-bottom: 30px; }
+        label { display: block; color: var(--neon-gold); font-weight: 700; margin-bottom: 12px; font-size: 1.1rem; }
         
-        /* --- FORM ELEMENTS --- */
-        h2 { color: var(--neon-gold); font-family: 'Orbitron'; margin-bottom: 25px; text-align: center; }
-        .input-group { margin-bottom: 25px; }
-        label { display: block; margin-bottom: 10px; font-weight: 600; color: var(--neon-blue); }
-        input[type="file"], textarea, input[type="text"] {
-            width: 100%; background: rgba(0,0,0,0.5); border: 1px solid #333;
-            color: #fff; padding: 15px; border-radius: 12px; outline: none;
-            font-family: 'Rajdhani'; font-size: 1rem; transition: 0.3s;
+        input[type="file"], input[type="text"], input[type="number"], textarea {
+            width: 100%;
+            background: #000;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 18px;
+            border-radius: 15px;
+            outline: none;
+            font-family: 'Rajdhani';
+            font-size: 1.1rem;
+            transition: 0.3s;
         }
-        input[type="file"]::file-selector-button {
-            background: #333; color: var(--neon-blue); border: 1px solid var(--neon-blue);
-            padding: 8px 15px; border-radius: 8px; cursor: pointer; margin-right: 15px;
-        }
-        input:focus, textarea:focus { border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(0, 243, 255, 0.3); }
-        
-        .action-btn {
-            width: 100%; padding: 18px; border: none; border-radius: 30px;
-            background: linear-gradient(45deg, var(--neon-blue), #0066ff);
-            color: #000; font-family: 'Orbitron'; font-weight: 900; font-size: 1.2rem;
-            cursor: pointer; transition: 0.4s; box-shadow: 0 5px 20px rgba(0, 243, 255, 0.4);
-        }
-        .action-btn:hover { transform: scale(1.03); box-shadow: 0 10px 30px rgba(0, 243, 255, 0.6); }
-        .action-btn:disabled { background: #333; color: #666; cursor: not-allowed; box-shadow: none; }
-        #status-bar { margin-top: 20px; text-align: center; font-weight: 700; color: var(--neon-gold); min-height: 25px; }
 
-        /* SweetAlert Customization */
-        div:where(.swal2-container) div:where(.swal2-popup) {
-            background: #11111a !important; border: 1px solid var(--neon-blue);
+        input:focus { border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(0, 243, 255, 0.4); }
+
+        .submit-btn {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(90deg, #00f3ff, #0077ff);
+            border: none;
+            border-radius: 40px;
+            color: #000;
+            font-family: 'Orbitron';
+            font-weight: 900;
+            font-size: 1.3rem;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 243, 255, 0.4);
+            transition: 0.3s;
         }
-        div:where(.swal2-container) h2:where(.swal2-title), div:where(.swal2-container) div:where(.swal2-html-container) {
-            color: #fff !important; font-family: 'Rajdhani';
+
+        .submit-btn:hover { transform: scale(1.02); box-shadow: 0 15px 45px rgba(0, 243, 255, 0.6); }
+
+        .file-list {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            max-height: 150px;
+            overflow-y: auto;
         }
-        div:where(.swal2-container) input:where(.swal2-input) { color: #fff !important; border-color: var(--neon-blue) !important; }
+
+        #status-box { margin-top: 25px; text-align: center; color: var(--neon-gold); font-weight: bold; font-size: 1.1rem; }
+
+        /* Mobile Adjustments */
+        @media (max-width: 600px) {
+            .swarg-logo { font-size: 2rem; }
+            .amar-name { font-size: 1.1rem; }
+            .tool-grid { grid-template-columns: 1fr 1fr; }
+            .card { padding: 25px 10px; }
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="main-title">SWARG</div>
-    <div class="sub-branding">
-        <span class="creator-name">Amar Kumar</span>
+    <div class="swarg-logo">SWARG</div>
+    <div class="creator-container">
+        <span class="amar-name">Amar Kumar</span>
         <div class="blue-tick">✔</div>
     </div>
 </header>
 
 <div class="container">
-    <div id="menu-section">
-        <p class="hero-text">Professional Local PDF Tools. Zero Uploads. 100% Privacy.</p>
-        <div class="grid-menu">
-            <div class="tool-card" onclick="loadTool('img2pdf')">
-                <span class="card-icon">📸</span>
-                <span class="card-title">Images to PDF (Bulk)</span>
-            </div>
-            <div class="tool-card" onclick="loadTool('text2pdf')">
-                <span class="card-icon">📝</span>
-                <span class="card-title">Text to PDF</span>
-            </div>
-            <div class="tool-card" onclick="loadTool('merge')">
-                <span class="card-icon">🔗</span>
-                <span class="card-title">Merge PDFs</span>
-            </div>
-            <div class="tool-card" onclick="loadTool('split')">
-                <span class="card-icon">✂️</span>
-                <span class="card-title">Split PDF (Advanced)</span>
-            </div>
+    <div id="home-ui">
+        <p class="hero-desc">The Ultimate PDF & Image Engine. Faster. Secure. God-Mode.</p>
+        
+        <div class="tool-grid">
+            <div class="card" onclick="openTool('img2pdf')"><i>📸</i><h3>Img to PDF</h3></div>
+            <div class="card" onclick="openTool('text2pdf')"><i>✍️</i><h3>Text to PDF</h3></div>
+            <div class="card" onclick="openTool('merge')"><i>🔗</i><h3>Merge PDF</h3></div>
+            <div class="card" onclick="openTool('split')"><i>✂️</i><h3>Split PDF</h3></div>
+            <div class="card" onclick="openTool('comp-pdf')"><i>📉</i><h3>Compress PDF</h3></div>
+            <div class="card" onclick="openTool('comp-jpg')"><i>🖼️</i><h3>Compress JPG</h3></div>
         </div>
     </div>
 
     <div id="workspace">
-        <button class="back-btn" onclick="goHome()">← Back to Swarg Home</button>
-        <div id="tool-content" class="tool-container">
-            </div>
-        <div id="status-bar"></div>
+        <a class="back-link" onclick="goHome()">← BACK TO HOME</a>
+        <div class="tool-panel">
+            <h2 id="tool-title" style="font-family: 'Orbitron'; color: var(--neon-blue); margin-bottom: 30px; text-align: center;">TOOL NAME</h2>
+            <div id="tool-content"></div>
+            <div id="status-box"></div>
+        </div>
     </div>
 </div>
 
 <script>
-    // Initialize libraries
+    // CORE INITIALIZATION
     const { jsPDF } = window.jspdf;
     const { PDFDocument } = PDFLib;
 
-    // UI Navigation Functions
-    function loadTool(toolType) {
-        document.getElementById('menu-section').style.display = 'none';
-        const workspace = document.getElementById('workspace');
-        const content = document.getElementById('tool-content');
-        updateStatus('');
-        workspace.style.display = 'block';
+    function goHome() {
+        location.reload();
+    }
 
-        // Render appropriate tool interface
-        switch(toolType) {
-            case 'img2pdf':
-                content.innerHTML = `
-                    <h2>Bulk Images to PDF</h2>
-                    <div class="input-group">
-                        <label>Select Images (Max 1000+):</label>
-                        <input type="file" id="imgFiles" multiple accept="image/jpeg, image/png" onchange="countFiles(this)">
-                    </div>
-                    <button id="actionBtn" class="action-btn" onclick="processImg2Pdf()">GENERATE PDF</button>
-                `;
-                break;
-            case 'text2pdf':
-                content.innerHTML = `
-                    <h2>Text Document to PDF</h2>
-                    <div class="input-group">
-                        <label>Paste Your Text Here:</label>
-                        <textarea id="pdf Text" rows="12" placeholder="Type or paste content here..."></textarea>
-                    </div>
-                    <button id="actionBtn" class="action-btn" onclick="processText2Pdf()">GENERATE PDF</button>
-                `;
-                break;
-            case 'merge':
-                content.innerHTML = `
-                    <h2>Merge Multiple PDFs</h2>
-                    <div class="input-group">
-                        <label>Select PDF Files (In Order):</label>
-                        <input type="file" id="mergeFiles" multiple accept=".pdf" onchange="countFiles(this)">
-                    </div>
-                    <button id="actionBtn" class="action-btn" onclick="processMerge()">MERGE FILES</button>
-                `;
-                break;
-            case 'split':
-                content.innerHTML = `
-                    <h2>Advanced PDF Splitter</h2>
-                    <div class="input-group">
-                        <label>1. Select Source PDF:</label>
-                        <input type="file" id="splitFile" accept=".pdf">
-                    </div>
-                    <div class="input-group">
-                        <label>2. Pages to Extract (e.g., 1, 3-5, 8):</label>
-                        <input type="text" id="pageRange" placeholder="Example: 1, 2, 5-10">
-                        <small style="color:#888; display:block; margin-top:5px;">Use commas for single pages and hyphens for ranges.</small>
-                    </div>
-                    <button id="actionBtn" class="action-btn" onclick="processSplit()">EXTRACT PAGES</button>
-                `;
-                break;
+    function openTool(tool) {
+        document.getElementById('home-ui').style.display = 'none';
+        const ws = document.getElementById('workspace');
+        const content = document.getElementById('tool-content');
+        const title = document.getElementById('tool-title');
+        ws.style.display = 'block';
+
+        if(tool === 'img2pdf') {
+            title.innerText = "IMAGES TO PDF";
+            content.innerHTML = `
+                <div class="input-group">
+                    <label>Select Multiple Images (1000+ support):</label>
+                    <input type="file" id="targetFiles" multiple accept="image/*" onchange="showSelectedFiles()">
+                    <div id="fileDisplay" class="file-list" style="display:none;"></div>
+                </div>
+                <button class="submit-btn" onclick="runImg2Pdf()">BUILD PDF</button>
+            `;
+        } else if(tool === 'text2pdf') {
+            title.innerText = "TEXT TO PDF";
+            content.innerHTML = `
+                <div class="input-group">
+                    <label>Paste your Document Content:</label>
+                    <textarea id="targetText" rows="12" placeholder="Start typing..."></textarea>
+                </div>
+                <button class="submit-btn" onclick="runText2Pdf()">DOWNLOAD PDF</button>
+            `;
+        } else if(tool === 'merge') {
+            title.innerText = "MERGE PDF FILES";
+            content.innerHTML = `
+                <div class="input-group">
+                    <label>Select 2 or more PDF files:</label>
+                    <input type="file" id="targetFiles" multiple accept=".pdf" onchange="showSelectedFiles()">
+                    <div id="fileDisplay" class="file-list" style="display:none;"></div>
+                </div>
+                <button class="submit-btn" onclick="runMerge()">MERGE PDFs</button>
+            `;
+        } else if(tool === 'split') {
+            title.innerText = "ADVANCED SPLIT PDF";
+            content.innerHTML = `
+                <div class="input-group">
+                    <label>Upload Source PDF:</label>
+                    <input type="file" id="targetFile" accept=".pdf">
+                </div>
+                <div class="input-group">
+                    <label>Enter Page Numbers to Extract:</label>
+                    <input type="text" id="targetPages" placeholder="Example: 1, 3, 5-8, 12">
+                    <p style="font-size:0.8rem; color:#888; margin-top:5px;">Note: Bhai, single page ke liye number likho (1, 2) aur range ke liye dash (5-10).</p>
+                </div>
+                <button class="submit-btn" onclick="runSplit()">EXTRACT PAGES</button>
+            `;
+        } else if(tool === 'comp-pdf') {
+            title.innerText = "SMART PDF COMPRESSOR";
+            content.innerHTML = `
+                <div class="input-group">
+                    <label>Select PDF to Compress:</label>
+                    <input type="file" id="targetFile" accept=".pdf">
+                </div>
+                <div class="input-group">
+                    <label>Target Size (Optional - in KB):</label>
+                    <input type="number" id="targetSize" placeholder="e.g. 500">
+                </div>
+                <button class="submit-btn" onclick="runCompressPDF()">COMPRESS PDF</button>
+            `;
+        } else if(tool === 'comp-jpg') {
+            title.innerText = "IMAGE SIZE OPTIMIZER";
+            content.innerHTML = `
+                <div class="input-group">
+                    <label>Select JPG Image:</label>
+                    <input type="file" id="targetFile" accept="image/jpeg, image/jpg">
+                </div>
+                <div class="input-group">
+                    <label>Target Maximum Size (in KB):</label>
+                    <input type="number" id="targetSize" placeholder="e.g. 100">
+                </div>
+                <button class="submit-btn" onclick="runCompressJPG()">OPTIMIZE SIZE</button>
+            `;
         }
     }
 
-    function goHome() {
-        document.getElementById('workspace').style.display = 'none';
-        document.getElementById('menu-section').style.display = 'block';
+    function showSelectedFiles() {
+        const input = document.getElementById('targetFiles');
+        const display = document.getElementById('fileDisplay');
+        display.style.display = 'block';
+        display.innerHTML = "<strong>Selected:</strong><br>";
+        for(let f of input.files) {
+            display.innerHTML += `• ${f.name} (${(f.size/1024).toFixed(1)} KB)<br>`;
+        }
     }
 
-    function updateStatus(msg, isError = false) {
-        const status = document.getElementById('status-bar');
-        status.style.color = isError ? '#ff4757' : 'var(--neon-gold)';
-        status.innerText = msg;
-    }
-
-    function countFiles(input) {
-        updateStatus(`${input.files.length} file(s) selected.`);
-    }
-
-    // Helper: Professional Filename Prompt
-    async function askFileName(defaultName) {
-        const { value: fileName } = await Swal.fire({
-            title: 'Name Your PDF',
+    // --- UTILITIES ---
+    async function getFileName(def) {
+        const { value: name } = await Swal.fire({
+            title: 'File Name',
             input: 'text',
-            inputValue: defaultName,
-            inputLabel: 'Enter a professional filename:',
-            inputPlaceholder: 'e.g., My-Important-Docs',
-            background: '#111',
-            color: '#fff',
-            confirmButtonColor: '#00f3ff',
-            confirmButtonText: 'SAVE PDF',
-            showCancelButton: true,
-            inputValidator: (value) => {
-                if (!value) return 'Filename cannot be empty!';
-            }
+            inputValue: def,
+            inputLabel: 'Bhai, PDF ka naam kya rakhu?',
+            background: '#111', color: '#fff', confirmButtonColor: '#00f3ff'
         });
-        return fileName ? (fileName.endsWith('.pdf') ? fileName : `${fileName}.pdf`) : null;
+        return name || def;
     }
 
-    // --- TOOL LOGIC: IMAGE TO PDF ---
-    async function processImg2Pdf() {
-        const files = document.getElementById('imgFiles').files;
-        if (files.length === 0) return updateStatus("Please select images first!", true);
-
-        const fileName = await askFileName('Swarg-Images.pdf');
-        if (!fileName) return;
-
-        const btn = document.getElementById('actionBtn'); btn.disabled = true; btn.innerText = "PROCESSING...";
-        updateStatus(`Processing ${files.length} images. This uses your device power...`);
-
-        try {
-            const doc = new jsPDF();
-            for (let i = 0; i < files.length; i++) {
-                const dataUrl = await readFileAsDataURL(files[i]);
-                const imgProps = doc.getImageProperties(dataUrl);
-                const pdfWidth = doc.internal.pageSize.getWidth();
-                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-                
-                if (i > 0) doc.addPage();
-                doc.addImage(dataUrl, imgProps.format, 0, 0, pdfWidth, pdfHeight);
-                updateStatus(`Processed image ${i + 1} of ${files.length}...`);
-            }
-            doc.save(fileName);
-            updateStatus("Success! PDF downloaded.");
-        } catch (e) { updateStatus("Error generating PDF: " + e.message, true); }
-        btn.disabled = false; btn.innerText = "GENERATE PDF";
+    function setStatus(msg) {
+        document.getElementById('status-box').innerText = msg;
     }
 
-    // --- TOOL LOGIC: TEXT TO PDF ---
-    async function processText2Pdf() {
-        const text = document.getElementById('pdfText').value;
-        if (!text.trim()) return updateStatus("Text area is empty!", true);
+    // --- TOOLS LOGIC ---
 
-        const fileName = await askFileName('Swarg-Notes.pdf');
-        if (!fileName) return;
-
+    async function runImg2Pdf() {
+        const files = document.getElementById('targetFiles').files;
+        if(!files.length) return Swal.fire("Error", "Pehle photos toh select kar lo!", "error");
+        
+        const name = await getFileName("Swarg-Images");
+        setStatus("Processing Bulk Images...");
+        
         const doc = new jsPDF();
-        const splitText = doc.splitTextToSize(text, 180); // Margin handling
-        doc.text(splitText, 15, 20);
-        doc.save(fileName);
-        updateStatus("Success! Text PDF created.");
+        for(let i=0; i<files.length; i++) {
+            setStatus(`Processing Image ${i+1}/${files.length}...`);
+            const data = await new Promise(r => {
+                const rd = new FileReader();
+                rd.onload = e => r(e.target.result);
+                rd.readAsDataURL(files[i]);
+            });
+            if(i > 0) doc.addPage();
+            doc.addImage(data, 'JPEG', 0, 0, 210, 297);
+        }
+        doc.save(name + ".pdf");
+        setStatus("Download Complete!");
     }
 
-    // --- TOOL LOGIC: MERGE PDFS ---
-    async function processMerge() {
-        const files = document.getElementById('mergeFiles').files;
-        if (files.length < 2) return updateStatus("Select at least 2 PDF files to merge.", true);
-
-        const fileName = await askFileName('Swarg-Merged.pdf');
-        if (!fileName) return;
-
-        updateStatus("Merging PDFs... Please wait.");
-        const btn = document.getElementById('actionBtn'); btn.disabled = true;
-        try {
-            const mergedPdf = await PDFDocument.create();
-            for (let file of files) {
-                const arrayBuffer = await file.arrayBuffer();
-                const pdf = await PDFDocument.load(arrayBuffer);
-                const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
-                copiedPages.forEach((page) => mergedPdf.addPage(page));
-            }
-            const pdfBytes = await mergedPdf.save();
-            downloadBlob(pdfBytes, fileName, 'application/pdf');
-            updateStatus("Merged successfully!");
-        } catch (e) { updateStatus("Merge failed: File might be corrupted or encrypted.", true); }
-        btn.disabled = false;
+    async function runText2Pdf() {
+        const txt = document.getElementById('targetText').value;
+        if(!txt.trim()) return Swal.fire("Error", "Kuch likha hi nahi aapne!", "error");
+        
+        const name = await getFileName("Swarg-Notes");
+        const doc = new jsPDF();
+        const lines = doc.splitTextToSize(txt, 180);
+        doc.text(lines, 15, 20);
+        doc.save(name + ".pdf");
+        setStatus("Text PDF Downloaded!");
     }
 
-    // --- TOOL LOGIC: ADVANCED SPLIT PDF ---
-    async function processSplit() {
-        const fileInput = document.getElementById('splitFile');
-        const rangeInput = document.getElementById('pageRange').value;
+    async function runMerge() {
+        const files = document.getElementById('targetFiles').files;
+        if(files.length < 2) return Swal.fire("Error", "Kam se kam 2 PDF select karein merge ke liye!", "error");
+        
+        const name = await getFileName("Swarg-Merged");
+        setStatus("Merging Files... Please Wait.");
+        
+        const merged = await PDFDocument.create();
+        for(let f of files) {
+            const pdf = await PDFDocument.load(await f.arrayBuffer());
+            const pages = await merged.copyPages(pdf, pdf.getPageIndices());
+            pages.forEach(p => merged.addPage(p));
+        }
+        
+        const bytes = await merged.save();
+        triggerDownload(bytes, name + ".pdf");
+        setStatus("Merging Successful!");
+    }
 
-        if (!fileInput.files.length) return updateStatus("Select a source PDF first.", true);
-        if (!rangeInput.match(/^[\d,\s\-]+$/)) return updateStatus("Invalid page format. Use numbers, commas, hyphens.", true);
+    async function runSplit() {
+        const file = document.getElementById('targetFile').files[0];
+        const range = document.getElementById('targetPages').value;
+        if(!file || !range) return Swal.fire("Error", "PDF aur Page numbers dono zaruri hain!", "error");
 
-        const fileName = await askFileName('Swarg-Extracted.pdf');
-        if (!fileName) return;
-
-        updateStatus("Analyzing PDF structure...");
-        const btn = document.getElementById('actionBtn'); btn.disabled = true;
+        const name = await getFileName("Swarg-Split");
+        setStatus("Splitting PDF Structure...");
 
         try {
-            const arrayBuffer = await fileInput.files[0].arrayBuffer();
-            const srcPdf = await PDFDocument.load(arrayBuffer);
-            const totalPages = srcPdf.getPageCount();
+            const pdf = await PDFDocument.load(await file.arrayBuffer());
+            const total = pdf.getPageCount();
+            const splitPdf = await PDFDocument.create();
             
-            // Advanced Range Parsing Logic
-            const pagesToKeep = new Set();
-            rangeInput.split(',').forEach(part => {
-                const range = part.trim().split('-').map(p => parseInt(p));
-                if (range.length === 1) {
-                    if(range[0] > 0 && range[0] <= totalPages) pagesToKeep.add(range[0] - 1); // 0-indexed
-                } else if (range.length === 2) {
-                    const start = Math.min(range[0], range[1]);
-                    const end = Math.max(range[0], range[1]);
-                    for(let i = start; i <= end; i++) {
-                        if(i > 0 && i <= totalPages) pagesToKeep.add(i - 1);
-                    }
+            // Advanced Range Parsing (e.g. 1, 3-5)
+            const parts = range.split(',');
+            let pagesToExtract = [];
+
+            parts.forEach(p => {
+                if(p.includes('-')) {
+                    const [s, e] = p.split('-').map(Number);
+                    for(let i=s; i<=e; i++) if(i <= total) pagesToExtract.push(i-1);
+                } else {
+                    const n = Number(p.trim());
+                    if(n <= total) pagesToExtract.push(n-1);
                 }
             });
 
-            if(pagesToKeep.size === 0) throw new Error("No valid pages selected based on input.");
-
-            const newPdf = await PDFDocument.create();
-            const copiedPages = await newPdf.copyPages(srcPdf, Array.from(pagesToKeep));
-            copiedPages.forEach(page => newPdf.addPage(page));
+            const copied = await splitPdf.copyPages(pdf, pagesToExtract);
+            copied.forEach(p => splitPdf.addPage(p));
             
-            const pdfBytes = await newPdf.save();
-            downloadBlob(pdfBytes, fileName, 'application/pdf');
-            updateStatus(`Success! Extracted ${pagesToKeep.size} pages.`);
-
-        } catch (e) { updateStatus("Split Error: " + e.message, true); }
-        btn.disabled = false;
+            const bytes = await splitPdf.save();
+            triggerDownload(bytes, name + ".pdf");
+            setStatus("Split Successful!");
+        } catch(e) { setStatus("Error: Format galat hai shayad."); }
     }
 
-    // --- UTILITY FUNCTIONS ---
-    function readFileAsDataURL(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = (e) => resolve(e.target.result);
-            reader.onerror = reject;
-            reader.readAsDataURL(file);
-        });
+    async function runCompressJPG() {
+        const file = document.getElementById('targetFile').files[0];
+        const targetKB = document.getElementById('targetSize').value;
+        if(!file || !targetKB) return alert("Select image and set target size!");
+
+        setStatus("Optimizing Image Quality...");
+        const options = {
+            maxSizeMB: targetKB / 1024,
+            maxWidthOrHeight: 1920,
+            useWebWorker: true
+        };
+
+        try {
+            const compressedFile = await imageCompression(file, options);
+            triggerDownload(compressedFile, "Swarg-Compressed.jpg");
+            setStatus(`Compressed to ${(compressedFile.size/1024).toFixed(1)} KB`);
+        } catch (e) { setStatus("Compression Failed."); }
     }
 
-    function downloadBlob(bytes, name, type) {
-        const blob = new Blob([bytes], { type: type });
+    async function runCompressPDF() {
+        const file = document.getElementById('targetFile').files[0];
+        if(!file) return alert("Select PDF!");
+        
+        setStatus("Applying Smart Compression...");
+        // Client side PDF compression is limit. We re-save with optimization.
+        const pdf = await PDFDocument.load(await file.arrayBuffer());
+        const bytes = await pdf.save({ useObjectStreams: true, addDefaultPage: false });
+        triggerDownload(bytes, "Swarg-Optimized.pdf");
+        setStatus("Optimization Complete!");
+    }
+
+    function triggerDownload(data, name) {
+        const blob = data instanceof Blob ? data : new Blob([data], {type: "application/pdf"});
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
         link.download = name;
-        document.body.appendChild(link);
         link.click();
-        document.body.removeChild(link);
     }
 </script>
 </body>
