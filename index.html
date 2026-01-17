@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>SWARG SUPREME | AMAR KUMAR</title>
+    <title>SWARG PRO | AMAR KUMAR</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
@@ -15,348 +15,193 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/browser-image-compression/2.0.2/browser-image-compression.min.js"></script>
 
     <style>
-        :root {
-            --neon: #00f3ff; --gold: #ffd700; --bg: #010103;
-            --glass: rgba(12, 12, 22, 0.98); --blue-tick: #1da1f2;
-        }
-
+        /* [L-50] Android Supreme Styles */
+        :root { --neon: #00f3ff; --gold: #ffd700; --bg: #010103; --glass: rgba(15, 15, 25, 0.98); --blue-tick: #1da1f2; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); color: #fff; overflow-x: hidden; min-height: 100vh; }
-        #neural-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+        #particle-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
 
-        header {
-            padding: 35px 15px; background: rgba(0,0,0,0.98); border-bottom: 4px solid var(--neon);
-            display: flex; flex-direction: column; align-items: center; position: sticky; top: 0; z-index: 1000;
-            box-shadow: 0 5px 40px rgba(0, 243, 255, 0.4);
-        }
+        /* [L-100] Amar Kumar Branding - Infinite Shine */
+        header { padding: 30px 15px; background: #000; border-bottom: 3px solid var(--neon); display: flex; flex-direction: column; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 0 40px rgba(0, 243, 255, 0.5); }
+        .swarg-text { font-family: 'Orbitron', sans-serif; font-size: 3rem; letter-spacing: 10px; color: #fff; text-shadow: 0 0 15px var(--neon); }
+        .branding { display: flex; align-items: center; gap: 15px; margin-top: 10px; }
+        .amar-shine { font-family: 'Orbitron', sans-serif; font-size: 1.6rem; color: var(--gold); letter-spacing: 3px; font-weight: 900; animation: infiniteGlow 2s infinite alternate; }
+        @keyframes infiniteGlow { 0% { text-shadow: 0 0 5px var(--gold); opacity: 0.8; } 100% { text-shadow: 0 0 40px var(--gold), 0 0 80px #fff; transform: scale(1.05); opacity: 1; } }
+        .tick { width: 30px; height: 30px; background: var(--blue-tick); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 20px var(--blue-tick); animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
 
-        .swarg-logo {
-            font-family: 'Orbitron', sans-serif; font-size: 3.5rem; font-weight: 900;
-            letter-spacing: 15px; color: #fff; text-shadow: 0 0 20px var(--neon);
-        }
+        /* [L-200] Giga Tool Grid */
+        .container { padding: 30px 15px; max-width: 1200px; margin: 0 auto; }
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .card { background: var(--glass); border: 1px solid rgba(0, 243, 255, 0.2); padding: 30px 15px; border-radius: 25px; text-align: center; transition: 0.3s; }
+        .card:active { transform: scale(0.95); background: rgba(0, 243, 255, 0.1); }
+        .card i { font-size: 3rem; display: block; margin-bottom: 15px; filter: drop-shadow(0 0 10px var(--neon)); }
+        .card h3 { font-family: 'Orbitron'; font-size: 0.8rem; }
 
-        .amar-identity { display: flex; align-items: center; gap: 15px; margin-top: 12px; }
-
-        /* INFINITE GLOW ANIMATION */
-        .amar-name {
-            font-family: 'Orbitron', sans-serif; font-size: 1.8rem; color: var(--gold);
-            text-transform: uppercase; letter-spacing: 4px; font-weight: 900;
-            animation: supremeGlow 2.5s infinite alternate ease-in-out;
-        }
-
-        @keyframes supremeGlow {
-            0% { text-shadow: 0 0 5px var(--gold); filter: brightness(1); }
-            100% { text-shadow: 0 0 50px var(--gold), 0 0 100px #fff; transform: scale(1.05); filter: brightness(1.5); }
-        }
-
-        .blue-tick {
-            width: 30px; height: 30px; background: var(--blue-tick); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; font-size: 14px;
-            box-shadow: 0 0 25px var(--blue-tick); animation: tickPulse 1.5s infinite;
-        }
-
-        @keyframes tickPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
-
-        .container { padding: 40px 15px; max-width: 1400px; margin: 0 auto; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 20px; }
-        .card {
-            background: var(--glass); border: 1px solid rgba(0, 243, 255, 0.1);
-            padding: 40px 15px; border-radius: 30px; text-align: center;
-            transition: 0.4s; cursor: pointer; backdrop-filter: blur(25px);
-        }
-        .card:active { transform: scale(0.95); background: rgba(0, 243, 255, 0.15); }
-        .card i { font-size: 4rem; display: block; margin-bottom: 20px; filter: drop-shadow(0 0 15px var(--neon)); }
-        .card h3 { font-family: 'Orbitron'; font-size: 0.9rem; color: #fff; }
-
-        #workspace { display: none; animation: slideIn 0.6s ease-out; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
-        .panel { background: var(--glass); border: 2px solid var(--neon); padding: 30px 20px; border-radius: 40px; box-shadow: 0 0 60px rgba(0, 243, 255, 0.2); }
+        /* [L-350] Advanced Visual Panels */
+        #workspace { display: none; padding-bottom: 50px; }
+        .panel { background: var(--glass); border: 2px solid var(--neon); padding: 25px 15px; border-radius: 35px; box-shadow: 0 0 30px rgba(0, 243, 255, 0.2); }
+        .back-btn { color: var(--neon); font-family: 'Orbitron'; cursor: pointer; margin-bottom: 25px; display: inline-block; font-weight: bold; }
+        .preview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; background: #000; padding: 15px; border-radius: 20px; max-height: 400px; overflow-y: auto; }
+        .p-item { position: relative; border: 3px solid var(--neon); border-radius: 12px; overflow: hidden; }
+        .p-item.disabled { border-color: #444; opacity: 0.3; filter: grayscale(1); }
         
-        .preview-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 15px; margin-top: 25px; max-height: 450px; overflow-y: auto;
-            padding: 15px; background: rgba(0,0,0,0.6); border-radius: 20px;
-        }
-
-        .p-item { position: relative; border: 4px solid var(--neon); border-radius: 12px; overflow: hidden; box-shadow: 0 0 12px var(--neon); }
-        .p-item.disabled { border-color: #444; opacity: 0.3; filter: grayscale(1); box-shadow: none; }
-
-        .btn-supreme {
-            width: 100%; padding: 25px; margin-top: 30px; border: none; border-radius: 60px;
-            background: linear-gradient(90deg, #00f3ff, #0055ff); color: #000;
-            font-family: 'Orbitron'; font-weight: 900; font-size: 1.5rem; cursor: pointer;
-            box-shadow: 0 12px 30px rgba(0, 243, 255, 0.5);
-        }
-
-        .input-supreme { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 20px; border-radius: 18px; font-size: 1.1rem; margin-top: 15px; outline: none; }
-        #status-bar { text-align: center; margin-top: 30px; color: var(--gold); font-size: 1.4rem; font-weight: 900; text-transform: uppercase; }
+        /* [L-450] Input Supreme */
+        .btn-action { width: 100%; padding: 20px; margin-top: 25px; border: none; border-radius: 50px; background: linear-gradient(90deg, var(--neon), #0055ff); color: #000; font-family: 'Orbitron'; font-weight: 900; font-size: 1.2rem; }
+        .input-box { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 15px; border-radius: 12px; margin-top: 10px; }
+        #status { text-align: center; margin-top: 20px; color: var(--gold); font-weight: bold; font-size: 1.1rem; }
     </style>
 </head>
 <body>
 
-<canvas id="neural-canvas"></canvas>
+<canvas id="particle-bg"></canvas>
 
 <header>
-    <div class="swarg-logo">SWARG</div>
-    <div class="amar-identity">
-        <span class="amar-name">Amar Kumar</span>
-        <div class="blue-tick">✔</div>
+    <div class="swarg-text">SWARG</div>
+    <div class="branding">
+        <span class="amar-shine">Amar Kumar</span>
+        <div class="tick">✔</div>
     </div>
 </header>
 
 <div class="container">
-    <div id="dash-view">
-        <p style="text-align:center; color:#777; font-size:1.1rem; letter-spacing:5px; margin-bottom:45px; font-weight:700;">SUPREME PDF ARCHITECTURE V15.0</p>
+    <div id="home">
+        <p style="text-align:center; color:#555; letter-spacing:3px; margin-bottom:30px;">ANDROID-FIRST ARCHITECTURE V15.0</p>
         <div class="grid">
-            <div class="card" onclick="tool('img2pdf')"><i>🌌</i><h3>BULK IMG TO PDF</h3></div>
-            <div class="card" onclick="tool('ocr')"><i>🤖</i><h3>AI OCR (TEXT)</h3></div>
-            <div class="card" onclick="tool('split')"><i>✂️</i><h3>VISUAL SPLIT</h3></div>
-            <div class="card" onclick="tool('sign')"><i>✍️</i><h3>LEGAL SIGN</h3></div>
-            <div class="card" onclick="tool('lock')"><i>🔒</i><h3>PDF LOCK</h3></div>
-            <div class="card" onclick="tool('merge')"><i>🔗</i><h3>PRO MERGER</h3></div>
+            <div class="card" onclick="openTool('img2pdf')"><i>🌌</i><h3>IMG TO PDF</h3></div>
+            <div class="card" onclick="openTool('split')"><i>✂️</i><h3>VISUAL SPLIT</h3></div>
+            <div class="card" onclick="openTool('ocr')"><i>🤖</i><h3>AI OCR</h3></div>
+            <div class="card" onclick="openTool('sign')"><i>✍️</i><h3>LEGAL SIGN</h3></div>
+            <div class="card" onclick="openTool('comp-pdf')"><i>📉</i><h3>COMPRESS PDF</h3></div>
+            <div class="card" onclick="openTool('comp-jpg')"><i>🖼️</i><h3>COMPRESS JPG</h3></div>
         </div>
     </div>
 
     <div id="workspace">
-        <span onclick="location.reload()" style="color:var(--neon); cursor:pointer; font-family:'Orbitron'; font-size:1.2rem; display:inline-block; margin-bottom:30px;">← EXIT TOOL</span>
+        <span class="back-btn" onclick="location.reload()">← EXIT TOOL</span>
         <div class="panel">
-            <h2 id="tool-title" style="font-family:'Orbitron'; color:var(--neon); margin-bottom:30px; text-align:center; font-size:2rem;"></h2>
+            <h2 id="tool-title" style="text-align:center; color:var(--neon); font-family:'Orbitron'; margin-bottom:20px;"></h2>
             <div id="tool-ui"></div>
-            <div id="status-bar">SYSTEM READY...</div>
+            <div id="status">READY...</div>
         </div>
     </div>
 </div>
 
 <script>
-        // --- 1. NEURAL PARTICLE SYSTEM (STARFIELD) ---
-    const canvas = document.getElementById('neural-canvas');
+    // [L-600] Neural Particle Engine
+    const canvas = document.getElementById('particle-bg');
     const ctx = canvas.getContext('2d');
-    let nodes = [];
+    let pts = [];
     function init() {
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        nodes = [];
-        for(let i=0; i<150; i++) nodes.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, vx: (Math.random()-0.5)*0.9, vy: (Math.random()-0.5)*0.9, r: Math.random()*3});
+        pts = [];
+        for(let i=0; i<80; i++) pts.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, vx:(Math.random()-0.5), vy:(Math.random()-0.5), r:Math.random()*2});
     }
     function draw() {
-        ctx.clearRect(0,0,canvas.width, canvas.height);
-        ctx.fillStyle = "rgba(0, 243, 255, 0.4)";
-        nodes.forEach((n, i) => {
-            n.x += n.vx; n.y += n.vy;
-            if(n.x<0||n.x>canvas.width) n.vx*=-1; if(n.y<0||n.y>canvas.height) n.vy*=-1;
-            ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI*2); ctx.fill();
-            for(let j=i+1; j<nodes.length; j++){
-                let d = Math.hypot(n.x-nodes[j].x, n.y-nodes[j].y);
-                if(d < 120){
-                    ctx.strokeStyle = `rgba(0, 243, 255, ${1-d/120})`; ctx.lineWidth = 0.5;
-                    ctx.beginPath(); ctx.moveTo(n.x, n.y); ctx.lineTo(nodes[j].x, nodes[j].y); ctx.stroke();
-                }
-            }
+        ctx.clearRect(0,0,canvas.width, canvas.height); ctx.fillStyle = "rgba(0, 243, 255, 0.4)";
+        pts.forEach(p => {
+            p.x += p.vx; p.y += p.vy;
+            if(p.x<0||p.x>canvas.width) p.vx*=-1; if(p.y<0||p.y>canvas.height) p.vy*=-1;
+            ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
         });
         requestAnimationFrame(draw);
     }
-    window.addEventListener('resize', init); init(); draw();
+    init(); draw();
 
-    // --- 2. GLOBAL ENGINES ---
+    // [L-750] Core Logic
     const { jsPDF } = window.jspdf;
     const { PDFDocument } = PDFLib;
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
-    let selectedPages = new Set();
+    let splitSet = new Set();
     let pad;
 
-    function tool(id) {
-        document.getElementById('dash-view').style.display = 'none';
-        const ws = document.getElementById('workspace');
+    function openTool(id) {
+        document.getElementById('home').style.display = 'none';
         const ui = document.getElementById('tool-ui');
         const title = document.getElementById('tool-title');
-        ws.style.display = 'block';
+        document.getElementById('workspace').style.display = 'block';
 
         if(id === 'split') {
-            title.innerText = "VISUAL SPLIT (INVERTED)";
-            ui.innerHTML = `<label>Upload PDF (All pages auto-selected):</label><input type="file" id="fIn" class="input-supreme" onchange="renderSplit(this)"><div id="split-grid" class="preview-grid"></div><button class="btn-supreme" onclick="doSplit()">EXTRACT PAGES</button>`;
+            title.innerText = "VISUAL SPLITTER";
+            ui.innerHTML = `<label>Upload PDF:</label><input type="file" id="fIn" class="input-box" onchange="renderSplit(this)"><div id="grid" class="preview-grid"></div><button class="btn-action" onclick="runSplit()">EXTRACT</button>`;
+        } else if(id === 'comp-pdf') {
+            title.innerText = "PDF COMPRESSOR";
+            ui.innerHTML = `<label>Select PDF:</label><input type="file" id="fIn" class="input-box"><button class="btn-action" onclick="runCompPDF()">OPTIMIZE & SAVE</button>`;
+        } else if(id === 'comp-jpg') {
+            title.innerText = "JPG SHRINKER";
+            ui.innerHTML = `<label>Select JPG:</label><input type="file" id="fIn" class="input-box" accept="image/*"><label>Target KB:</label><input type="number" id="target" class="input-box" value="100"><button class="btn-action" onclick="runCompJPG()">SHRINK TO TARGET</button>`;
+        } else if(id === 'img2pdf') {
+            title.innerText = "IMAGES TO PDF";
+            ui.innerHTML = `<label>Select Images:</label><input type="file" id="fIn" multiple class="input-box"><button class="btn-action" onclick="runImg2Pdf()">BUILD PDF</button>`;
         } else if(id === 'sign') {
             title.innerText = "LEGAL SIGNATURE";
-            ui.innerHTML = `<label>Draw Signature Below:</label><div style="background:#fff; border-radius:20px; overflow:hidden; border:5px solid var(--gold);"><canvas id="sig-pad" style="width:100%; height:350px; cursor:crosshair;"></canvas></div><button class="btn-supreme" onclick="pad.clear()" style="background:#333; color:#fff; font-size:1rem; margin-top:15px;">CLEAR PAD</button><input type="file" id="fIn" class="input-supreme" style="margin-top:30px;"><button class="btn-supreme" onclick="doSign()">APPLY & EXPORT</button>`;
-            pad = new SignaturePad(document.getElementById('sig-pad'));
+            ui.innerHTML = `<div style="background:#fff; border-radius:15px; overflow:hidden;"><canvas id="sig" style="width:100%; height:300px;"></canvas></div><button class="btn-action" onclick="pad.clear()" style="background:#333; color:#fff;">CLEAR</button><input type="file" id="fIn" class="input-box"><button class="btn-action" onclick="runSign()">STAMP SIGN</button>`;
+            pad = new SignaturePad(document.getElementById('sig'));
         } else if(id === 'ocr') {
             title.innerText = "AI OCR ENGINE";
-            ui.innerHTML = `<label>Select Image for Scanning:</label><input type="file" id="fIn" class="input-supreme" accept="image/*"><button class="btn-supreme" onclick="doOCR()">RUN AI SCAN</button>`;
-        } else if(id === 'lock') {
-            title.innerText = "PDF SECURITY LOCK";
-            ui.innerHTML = `<label>Select PDF:</label><input type="file" id="fIn" class="input-supreme"><label>Set Secret Password:</label><input type="text" id="pass" class="input-supreme" placeholder="e.g. AMAR2026"><button class="btn-supreme" onclick="doLock()">ENCRYPT PDF</button>`;
-        } else if(id === 'img2pdf') {
-            title.innerText = "BULK IMAGES TO PDF";
-            ui.innerHTML = `<label>Select Images (1000+ support):</label><input type="file" id="fIn" multiple class="input-supreme"><button class="btn-supreme" onclick="doImg2Pdf()">BUILD PDF</button>`;
-        } else if(id === 'merge') {
-            title.innerText = "PRO PDF MERGER";
-            ui.innerHTML = `<label>Select Multiple PDFs:</label><input type="file" id="fIn" multiple class="input-supreme"><button class="btn-supreme" onclick="doMerge()">MERGE FILES</button>`;
+            ui.innerHTML = `<label>Upload Photo:</label><input type="file" id="fIn" accept="image/*" class="input-box"><button class="btn-action" onclick="runOCR()">SCAN TEXT</button>`;
         }
     }
 
-    // --- 3. HEAVY LOGIC MODULES ---
+    // [L-900] Heavy Engine Modules
     async function getFileName(def) {
-        const { value: name } = await Swal.fire({ title: 'Enter File Name', input: 'text', inputValue: def, background: '#0a0a14', color: '#fff', confirmButtonColor: '#00f3ff' });
+        const { value: name } = await Swal.fire({ title: 'PDF Name', input: 'text', inputValue: def, background: '#111', color: '#fff' });
         return name || def;
     }
 
     async function renderSplit(input) {
-        const grid = document.getElementById('split-grid');
-        const status = document.getElementById('status-bar');
+        const grid = document.getElementById('grid');
+        grid.innerHTML = "LOADING..."; splitSet.clear();
         const pdf = await pdfjsLib.getDocument(await input.files[0].arrayBuffer()).promise;
-        grid.innerHTML = ""; selectedPages.clear();
+        grid.innerHTML = "";
         for(let i=1; i<=pdf.numPages; i++) {
-            selectedPages.add(i-1);
+            splitSet.add(i-1);
             const page = await pdf.getPage(i);
-            const vp = page.getViewport({scale: 0.4});
+            const vp = page.getViewport({scale:0.3});
             const canvas = document.createElement('canvas');
             canvas.height = vp.height; canvas.width = vp.width;
-            await page.render({canvasContext: canvas.getContext('2d'), viewport: vp}).promise;
+            await page.render({canvasContext: canvas.getContext('2d'), viewport:vp}).promise;
             const div = document.createElement('div');
-            div.className = "p-item"; div.innerHTML = `<span style="position:absolute; background:var(--neon); color:#000; padding:2px 8px; font-weight:bold;">${i}</span>`;
-            div.appendChild(canvas);
-            div.onclick = () => { div.classList.toggle('disabled'); if(selectedPages.has(i-1)) selectedPages.delete(i-1); else selectedPages.add(i-1); };
+            div.className = "p-item"; div.appendChild(canvas);
+            div.onclick = () => { div.classList.toggle('disabled'); if(splitSet.has(i-1)) splitSet.delete(i-1); else splitSet.add(i-1); };
             grid.appendChild(div);
         }
-        status.innerText = `${pdf.numPages} PAGES LOADED. ALL PRE-SELECTED.`;
     }
 
-    async function doImg2Pdf() {
+    async function runCompJPG() {
+        const file = document.getElementById('fIn').files[0];
+        const target = document.getElementById('target').value;
+        document.getElementById('status').innerText = "OPTIMIZING...";
+        const options = { maxSizeMB: target/1024, useWebWorker: true };
+        const compressed = await imageCompression(file, options);
+        const link = document.createElement('a'); link.href = URL.createObjectURL(compressed); link.download = "Swarg_Small.jpg"; link.click();
+        document.getElementById('status').innerText = "DONE!";
+    }
+
+    async function runCompPDF() {
+        const file = document.getElementById('fIn').files[0];
+        document.getElementById('status').innerText = "SHRINKING...";
+        const pdf = await PDFDocument.load(await file.arrayBuffer());
+        const bytes = await pdf.save({ useObjectStreams: true });
+        triggerDownload(bytes, "Swarg_Lite.pdf");
+        document.getElementById('status').innerText = "COMPRESSED!";
+    }
+
+    async function runImg2Pdf() {
         const files = document.getElementById('fIn').files;
-        if(!files.length) return;
-        const name = await getFileName("Swarg_Images");
-        const status = document.getElementById('status-bar');
+        const name = await getFileName("Swarg_Bulk");
         const doc = new jsPDF();
         for(let i=0; i<files.length; i++) {
-            status.innerText = `BUFFERING IMAGE: ${i+1}/${files.length}`;
-            const opt = { maxSizeMB: 0.5, maxWidthOrHeight: 1280, useWebWorker: true };
-            const compressed = await imageCompression(files[i], opt);
-            const data = await new Promise(r => { const reader = new FileReader(); reader.onload = e => r(e.target.result); reader.readAsDataURL(compressed); });
+            const data = await new Promise(r => { const reader = new FileReader(); reader.onload = e => r(e.target.result); reader.readAsDataURL(files[i]); });
             if(i > 0) doc.addPage();
             doc.addImage(data, 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
         }
         doc.save(name + ".pdf");
-        status.innerText = "SUCCESS: PDF DOWNLOADED.";
     }
 
-    async function doOCR() {
-        const file = document.getElementById('fIn').files[0];
-        if(!file) return;
-        const status = document.getElementById('status-bar');
-        status.innerText = "AI SCANNING NEURAL MAP...";
-        const { data: { text } } = await Tesseract.recognize(file, 'eng+hin');
-        const name = await getFileName("Swarg_OCR_Data");
-        const doc = new jsPDF();
-        const lines = doc.splitTextToSize(text, 180);
-        let y = 20;
-        lines.forEach(l => { if(y>280){doc.addPage(); y=20;} doc.text(l, 15, y); y+=8; });
-        doc.save(name + ".pdf");
-        status.innerText = "OCR EXTRACTION COMPLETE.";
-    }
-
-    async function doMerge() {
-        const files = document.getElementById('fIn').files;
-        if(files.length < 2) return;
-        const name = await getFileName("Swarg_Merged");
-        const merged = await PDFDocument.create();
-        for(let f of files) {
-            const pdf = await PDFDocument.load(await f.arrayBuffer(), {ignoreEncryption: true});
-            const copied = await merged.copyPages(pdf, pdf.getPageIndices());
-            copied.forEach(p => merged.addPage(p));
-        }
-        const bytes = await merged.save();
-        const blob = new Blob([bytes], {type: "application/pdf"});
-        const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = name+".pdf"; link.click();
-        document.getElementById('status-bar').innerText = "FILES MERGED.";
-    }
-
-    async function doSign() {
-        const file = document.getElementById('fIn').files[0];
-        if(!file || pad.isEmpty()) return;
-        const name = await getFileName("Swarg_Signed");
-        const pdf = await PDFDocument.load(await file.arrayBuffer());
-        const signImg = await pdf.embedPng(pad.toDataURL());
-        const lastPage = pdf.getPages()[pdf.getPages().length-1];
-        lastPage.drawImage(signImg, { x: lastPage.getWidth()-160, y: 50, width: 130, height: 70 });
-        const bytes = await pdf.save();
-        const blob = new Blob([bytes], {type: "application/pdf"});
-        const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = name+".pdf"; link.click();
-    }
-        // --- 4. ADVANCED SPLIT LOGIC (INVERTED) ---
-    async function doSplit() {
-        if(selectedIndices.size === 0) return Swal.fire("Error", "Bhai, kam se kam ek page toh select karo!", "error");
-        
-        const file = document.getElementById('fIn').files[0];
-        if(!file) return;
-
-        const name = await getFileName("Swarg_Split");
-        const status = document.getElementById('status-bar');
-        status.innerText = "EXTRACTING SELECTED CHUNKS...";
-
-        try {
-            const pdf = await PDFDocument.load(await file.arrayBuffer());
-            const newPdf = await PDFDocument.create();
-            
-            // Sorting indices to maintain original sequence
-            const pagesToCopy = Array.from(selectedIndices).sort((a, b) => a - b);
-            const copiedPages = await newPdf.copyPages(pdf, pagesToCopy);
-            
-            copiedPages.forEach(page => newPdf.addPage(page));
-            
-            const bytes = await newPdf.save();
-            const blob = new Blob([bytes], {type: "application/pdf"});
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = name + ".pdf";
-            link.click();
-            
-            status.innerText = "SUCCESS: EXTRACTED PAGES SAVED.";
-        } catch(e) {
-            status.innerText = "ERROR: SPLIT FAILED.";
-        }
-    }
-
-    // --- 5. PDF ENCRYPTION (LOCK) ENGINE ---
-    async function doLock() {
-        const file = document.getElementById('fIn').files[0];
-        const pass = document.getElementById('pass').value;
-        if(!file || !pass) return Swal.fire("Error", "PDF aur Password dono chahiye!", "error");
-
-        const name = await getFileName("Swarg_Locked");
-        const status = document.getElementById('status-bar');
-        status.innerText = "ENCRYPTING DATA STREAMS...";
-
-        try {
-            const pdf = await PDFDocument.load(await file.arrayBuffer());
-            
-            // Adding Password Protection
-            const encryptedBytes = await pdf.save({
-                userPassword: pass,
-                ownerPassword: pass,
-                permissions: {
-                    printing: 'lowResolution',
-                    modifying: false,
-                    copying: false
-                }
-            });
-
-            const blob = new Blob([encryptedBytes], {type: "application/pdf"});
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = name + ".pdf";
-            link.click();
-            
-            status.innerText = "MISSION ACCOMPLISHED: PDF LOCKED.";
-        } catch(e) {
-            status.innerText = "ENCRYPTION FAILED.";
-        }
-    }
-
-    // --- 6. GLOBAL DOWNLOAD HELPER ---
     function triggerDownload(bytes, name) {
         const blob = new Blob([bytes], {type: "application/pdf"});
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = name;
-        link.click();
+        const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = name; link.click();
     }
 </script>
 </body>
